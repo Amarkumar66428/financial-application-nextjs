@@ -53,6 +53,7 @@ export function LoginForm() {
       router.refresh();
     } catch {
       setError("Network error. Check your connection and try again.");
+    } finally {
       setPending(false);
     }
   }

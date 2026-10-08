@@ -14,7 +14,12 @@ export type HoldingMetrics = {
 
 function metrics(invested: number, value: number): HoldingMetrics {
   const pnl = value - invested;
-  return { invested, value, pnl, pnlPct: invested ? (pnl / invested) * 100 : 0 };
+  return {
+    invested,
+    value,
+    pnl,
+    pnlPct: invested ? (pnl / invested) * 100 : 0,
+  };
 }
 
 export function holdingMetrics({ qty, avg, price }: Holding): HoldingMetrics {

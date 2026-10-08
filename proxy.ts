@@ -9,7 +9,9 @@ export async function proxy(request: NextRequest) {
 
   // Already signed in, so skip the login page.
   if (pathname === "/login") {
-    return result.ok ? NextResponse.redirect(new URL("/dashboard", request.url)) : NextResponse.next();
+    return result.ok
+      ? NextResponse.redirect(new URL("/dashboard", request.url))
+      : NextResponse.next();
   }
 
   if (!result.ok) {

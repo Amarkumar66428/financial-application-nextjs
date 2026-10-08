@@ -1,9 +1,20 @@
 import { memo } from "react";
-import { formatPct, formatSignedUsd, formatUsd, holdingMetrics } from "@/lib/portfolio";
+import {
+  formatPct,
+  formatSignedUsd,
+  formatUsd,
+  holdingMetrics,
+} from "@/lib/portfolio";
 import type { LiveHolding } from "@/hooks/use-live-prices";
 
 // Primitive props so memo can skip rows that didn't change.
-const HoldingRow = memo(function HoldingRow({ symbol, qty, avg, price, prevPrice }: LiveHolding) {
+const HoldingRow = memo(function HoldingRow({
+  symbol,
+  qty,
+  avg,
+  price,
+  prevPrice,
+}: LiveHolding) {
   const { value, pnl, pnlPct } = holdingMetrics({ symbol, qty, avg, price });
   const tone = pnl >= 0 ? "text-gain" : "text-loss";
   const move = price > prevPrice ? "up" : price < prevPrice ? "down" : "flat";
@@ -12,7 +23,9 @@ const HoldingRow = memo(function HoldingRow({ symbol, qty, avg, price, prevPrice
     <tr className="transition hover:bg-indigo-50/50">
       <td className="px-6 py-4 font-semibold text-brand">{symbol}</td>
       <td className="px-6 py-4 text-right">{qty}</td>
-      <td className="px-6 py-4 text-right text-muted-foreground">{formatUsd(avg)}</td>
+      <td className="px-6 py-4 text-right text-muted-foreground">
+        {formatUsd(avg)}
+      </td>
       <td
         className={`whitespace-nowrap px-6 py-4 text-right font-medium transition-colors duration-500 ${
           move === "up" ? "text-gain" : move === "down" ? "text-loss" : ""
@@ -24,9 +37,13 @@ const HoldingRow = memo(function HoldingRow({ symbol, qty, avg, price, prevPrice
         {formatUsd(price)}
       </td>
       <td className="px-6 py-4 text-right font-medium">{formatUsd(value)}</td>
-      <td className={`whitespace-nowrap px-6 py-4 text-right font-medium ${tone}`}>
+      <td
+        className={`whitespace-nowrap px-6 py-4 text-right font-medium ${tone}`}
+      >
         {formatSignedUsd(pnl)}
-        <span className={`ml-2 rounded-full px-2 py-0.5 text-xs ${pnl >= 0 ? "bg-gain-muted" : "bg-loss-muted"}`}>
+        <span
+          className={`ml-2 rounded-full px-2 py-0.5 text-xs ${pnl >= 0 ? "bg-gain-muted" : "bg-loss-muted"}`}
+        >
           {formatPct(pnlPct)}
         </span>
       </td>

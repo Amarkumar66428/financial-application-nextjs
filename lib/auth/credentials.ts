@@ -7,8 +7,14 @@ const MOCK_USER = {
   password: "123456",
 };
 
-export function authenticate(email: string, password: string): { id: string } | null {
-  if (email.toLowerCase() === MOCK_USER.email && password === MOCK_USER.password) {
+export function authenticate(
+  email: string,
+  password: string,
+): { id: string } | null {
+  if (
+    email.toLowerCase() === MOCK_USER.email &&
+    password === MOCK_USER.password
+  ) {
     return { id: MOCK_USER.id };
   }
   return null;

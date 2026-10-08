@@ -13,7 +13,10 @@ function nextPrice(price: number): number {
   return Math.max(0.01, Math.round(price * (1 + drift) * 100) / 100);
 }
 
-export function useLivePrices(initial: Holding[], { intervalMs = 2500, paused = false } = {}) {
+export function useLivePrices(
+  initial: Holding[],
+  { intervalMs = 2500, paused = false } = {},
+) {
   const [holdings, setHoldings] = useState<LiveHolding[]>(() =>
     initial.map((h) => ({ ...h, prevPrice: h.price })),
   );
@@ -23,7 +26,13 @@ export function useLivePrices(initial: Holding[], { intervalMs = 2500, paused = 
 
     let timer: ReturnType<typeof setInterval> | undefined;
     const tick = () =>
-      setHoldings((prev) => prev.map((h) => ({ ...h, prevPrice: h.price, price: nextPrice(h.price) })));
+      setHoldings((prev) =>
+        prev.map((h) => ({
+          ...h,
+          prevPrice: h.price,
+          price: nextPrice(h.price),
+        })),
+      );
     const start = () => {
       timer ??= setInterval(tick, intervalMs);
     };

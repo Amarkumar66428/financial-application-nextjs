@@ -8,7 +8,11 @@ import { SummaryCards } from "./summary-cards";
 
 // Starts from the server-rendered holdings so hydration matches, then
 // ticks prices on the client.
-export function LivePortfolio({ initialHoldings }: { initialHoldings: Holding[] }) {
+export function LivePortfolio({
+  initialHoldings,
+}: {
+  initialHoldings: Holding[];
+}) {
   const [paused, setPaused] = useState(false);
   const holdings = useLivePrices(initialHoldings, { intervalMs: 2500, paused });
   const totals = useMemo(() => portfolioTotals(holdings), [holdings]);
@@ -27,8 +31,12 @@ export function LivePortfolio({ initialHoldings }: { initialHoldings: Holding[] 
             className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-50"
           >
             <span className="relative flex size-2">
-              {!paused && <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />}
-              <span className={`relative inline-flex size-2 rounded-full ${paused ? "bg-slate-400" : "bg-emerald-500"}`} />
+              {!paused && (
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              )}
+              <span
+                className={`relative inline-flex size-2 rounded-full ${paused ? "bg-slate-400" : "bg-emerald-500"}`}
+              />
             </span>
             {paused ? "Paused" : "Live"}
           </button>

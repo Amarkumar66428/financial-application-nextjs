@@ -20,7 +20,9 @@ export async function fetchPortfolio(token: string): Promise<Holding[]> {
   });
 
   if (!res.ok) {
-    logger.error("dashboard", "Portfolio API request failed", { status: res.status });
+    logger.error("dashboard", "Portfolio API request failed", {
+      status: res.status,
+    });
     throw new Error(`Portfolio API responded with ${res.status}`);
   }
 

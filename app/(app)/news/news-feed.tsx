@@ -144,7 +144,9 @@ export function NewsFeed({
               </span>
               <div>
                 <h2 className="font-semibold">{article.title}</h2>
-                <p className="text-xs text-muted-foreground">{article.source}</p>
+                <p className="text-xs text-muted-foreground">
+                  {article.source}
+                </p>
               </div>
             </li>
           ))}

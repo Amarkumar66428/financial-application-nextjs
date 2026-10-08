@@ -7,7 +7,9 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
       <header className="sticky top-0 z-10 border-b border-indigo-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
           <div className="flex items-center gap-8">
-            <span className="text-lg font-bold text-primary">Financial Application</span>
+            <span className="text-lg font-bold text-primary">
+              Financial Application
+            </span>
             <NavLinks />
           </div>
           <LogoutButton />

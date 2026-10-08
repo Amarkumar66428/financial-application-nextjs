@@ -16,9 +16,14 @@ export function ErrorState({
   }, [title, error]);
 
   return (
-    <div role="alert" className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center">
+    <div
+      role="alert"
+      className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center"
+    >
       <h2 className="text-lg font-semibold text-rose-700">{title}</h2>
-      <p className="mt-1 text-sm text-rose-600">Something went wrong. Please try again.</p>
+      <p className="mt-1 text-sm text-rose-600">
+        Something went wrong. Please try again.
+      </p>
       <button
         type="button"
         onClick={retry}
