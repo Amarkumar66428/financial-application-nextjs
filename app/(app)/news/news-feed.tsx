@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import type { NewsArticle } from "@/lib/data/news";
 
 const PAGE_SIZE = 5;
 const ALL_SOURCES = "all";
+const REFRESH_MS = 30_000; // matches the 30s revalidate on getNews()
 
 // Shared clock so "Updated 2 minutes ago" keeps ticking without setState in an effect.
 let now = Date.now();
@@ -15,6 +17,35 @@ function subscribeToClock(onChange: () => void) {
     onChange();
   }, 30_000);
   return () => clearInterval(id);
+}
+
+// Re-fetch the server-rendered feed so the ISR cache's latest version shows up.
+function useAutoRefresh() {
+  const router = useRouter();
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const start = () => {
+      timer ??= setInterval(() => router.refresh(), REFRESH_MS);
+    };
+    const stop = () => {
+      clearInterval(timer);
+      timer = undefined;
+    };
+    // Pause in background tabs, and catch up right away when the user returns.
+    const onVisibility = () => {
+      if (document.hidden) return stop();
+      router.refresh();
+      start();
+    };
+
+    start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [router]);
 }
 
 function useNow() {
@@ -47,6 +78,7 @@ export function NewsFeed({
   const [source, setSource] = useState<string>(ALL_SOURCES);
   const [page, setPage] = useState(1);
   const current = useNow();
+  useAutoRefresh();
 
   const sources = useMemo(() => {
     const counts = new Map<string, number>();
