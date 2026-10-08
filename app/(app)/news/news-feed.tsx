@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { NewsArticle } from "@/lib/data/news";
 
 const PAGE_SIZE = 5;
 const ALL_SOURCES = "all";
 const REFRESH_MS = 30_000; // matches the 30s revalidate on getNews()
-
-// Shared clock so "Updated 2 minutes ago" keeps ticking without setState in an effect.
-let now = Date.now();
-function subscribeToClock(onChange: () => void) {
-  now = Date.now();
-  const id = setInterval(() => {
-    now = Date.now();
-    onChange();
-  }, 30_000);
-  return () => clearInterval(id);
-}
 
 // Re-fetch the server-rendered feed so the ISR cache's latest version shows up.
 function useAutoRefresh() {
@@ -48,26 +37,6 @@ function useAutoRefresh() {
   }, [router]);
 }
 
-function useNow() {
-  return useSyncExternalStore(
-    subscribeToClock,
-    () => now,
-    () => null,
-  );
-}
-
-const relativeFormat = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-
-function timeAgo(iso: string, current: number) {
-  const seconds = Math.round((new Date(iso).getTime() - current) / 1000);
-  if (Math.abs(seconds) < 45) return "just now";
-  const minutes = Math.round(seconds / 60);
-  if (Math.abs(minutes) < 60) return relativeFormat.format(minutes, "minute");
-  const hours = Math.round(minutes / 60);
-  if (Math.abs(hours) < 24) return relativeFormat.format(hours, "hour");
-  return relativeFormat.format(Math.round(hours / 24), "day");
-}
-
 export function NewsFeed({
   articles,
   generatedAt,
@@ -77,7 +46,6 @@ export function NewsFeed({
 }) {
   const [source, setSource] = useState<string>(ALL_SOURCES);
   const [page, setPage] = useState(1);
-  const current = useNow();
   useAutoRefresh();
 
   const sources = useMemo(() => {
@@ -117,16 +85,6 @@ export function NewsFeed({
 
   return (
     <section className="space-y-4">
-      <p className="text-xs text-muted-foreground">
-        Updated{" "}
-        <time
-          dateTime={generatedAt}
-          title={new Date(generatedAt).toUTCString()}
-        >
-          {current === null ? "recently" : timeAgo(generatedAt, current)}
-        </time>
-      </p>
-
       <div
         role="group"
         aria-label="Filter by source"
